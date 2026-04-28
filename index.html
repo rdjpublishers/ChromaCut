@@ -1,0 +1,914 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>ChromaCut – Solid Background Remover | Free & Private</title>
+    <meta name="description" content="ChromaCut removes any solid‑color background instantly. Pick a color, adjust tolerance, download transparent PNG. 100% private – runs in your browser. Free tool by RDJ Publishers.">
+    <meta name="keywords" content="background remover, remove background, chroma key, transparent PNG, solid color remover, free image tool, privacy first, no upload">
+    <meta name="author" content="RDJ Publishers">
+    <meta name="robots" content="index, follow">
+    <meta property="og:title" content="ChromaCut – Solid Background Remover">
+    <meta property="og:description" content="Remove any solid background with one click. Free, fast, and private. No uploads, no sign-up.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://rdjpublishers.github.io/ChromaCut/">
+    <meta name="twitter:card" content="summary_large_image">
+
+    <!-- Google AdSense -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8728382905346597" crossorigin="anonymous"></script>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --bg:         #F4F6FB;
+            --bg-alt:     #EEF1F8;
+            --surface:    #FFFFFF;
+            --surface-2:  #F9FAFD;
+
+            --accent:     #4F46E5;
+            --accent-lt:  #6366F1;
+            --accent-bg:  rgba(79,70,229,0.07);
+            --accent-ring: rgba(79,70,229,0.22);
+
+            --teal:       #0891B2;
+            --teal-bg:    rgba(8,145,178,0.08);
+
+            --text:       #111827;
+            --text-2:     #374151;
+            --text-3:     #6B7280;
+            --text-4:     #9CA3AF;
+
+            --border:     #E5E7EB;
+            --border-2:   #D1D5DB;
+            --shadow-sm:  0 1px 3px rgba(0,0,0,0.07), 0 1px 2px rgba(0,0,0,0.04);
+            --shadow-md:  0 4px 16px rgba(0,0,0,0.08), 0 1px 4px rgba(0,0,0,0.04);
+            --shadow-lg:  0 10px 32px rgba(0,0,0,0.12), 0 2px 8px rgba(0,0,0,0.06);
+
+            --r-sm: 8px;
+            --r-md: 14px;
+            --r-lg: 20px;
+            --r-xl: 28px;
+        }
+
+        *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+
+        body {
+            font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        /* Subtle dot pattern */
+        body::before {
+            content: '';
+            position: fixed; inset: 0;
+            background-image: radial-gradient(circle, #C7D2FE 1px, transparent 1px);
+            background-size: 28px 28px;
+            opacity: 0.45;
+            pointer-events: none;
+            z-index: 0;
+        }
+        /* Gradient orb */
+        body::after {
+            content: '';
+            position: fixed;
+            top: -120px; right: -120px;
+            width: 480px; height: 480px;
+            background: radial-gradient(circle, rgba(99,102,241,0.12) 0%, transparent 65%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* ── TOP BAR ── */
+        .topbar {
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            height: 60px;
+            background: rgba(255,255,255,0.9);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            padding: 0 1.25rem;
+            z-index: 900;
+            box-shadow: var(--shadow-sm);
+            gap: 1rem;
+        }
+        .menu-btn {
+            width: 38px; height: 38px;
+            border-radius: var(--r-sm);
+            border: 1px solid var(--border);
+            background: var(--surface);
+            color: var(--text-2);
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer;
+            transition: all 0.18s ease;
+            flex-shrink: 0;
+        }
+        .menu-btn:hover {
+            background: var(--accent-bg);
+            border-color: var(--accent-ring);
+            color: var(--accent);
+        }
+        .topbar-logo {
+            display: flex; align-items: center; gap: 8px;
+            cursor: pointer; user-select: none;
+        }
+        .topbar-logo img { height: 32px; object-fit: contain; }
+        .topbar-logo-text {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.15rem; font-weight: 800;
+            letter-spacing: -0.03em; color: var(--accent);
+        }
+        .topbar-right { margin-left: auto; }
+        .topbar-pill {
+            display: inline-flex; align-items: center; gap: 0.4rem;
+            background: var(--accent-bg);
+            border: 1px solid var(--accent-ring);
+            border-radius: 20px;
+            padding: 0.28rem 0.75rem;
+            font-size: 0.72rem; font-weight: 600;
+            color: var(--accent);
+        }
+        .pill-dot {
+            width: 6px; height: 6px; border-radius: 50%;
+            background: var(--accent);
+            animation: blink 2s ease-in-out infinite;
+        }
+        @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.35} }
+
+        /* ── SIDEBAR OVERLAY ── */
+        .sidebar-overlay {
+            position: fixed; inset: 0;
+            background: rgba(17,24,39,0.3);
+            backdrop-filter: blur(2px);
+            z-index: 1000;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.28s ease;
+        }
+        .sidebar-overlay.visible {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        /* ── SIDEBAR ── */
+        .sidebar {
+            position: fixed;
+            top: 0; left: 0;
+            width: 272px; height: 100%;
+            background: var(--surface);
+            border-right: 1px solid var(--border);
+            z-index: 1100;
+            display: flex; flex-direction: column;
+            box-shadow: var(--shadow-lg);
+            transform: translateX(-100%);
+            transition: transform 0.28s cubic-bezier(0.4,0,0.2,1);
+            overflow-y: auto;
+        }
+        .sidebar.open { transform: translateX(0); }
+
+        .sidebar-top {
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 1.1rem 1.2rem;
+            border-bottom: 1px solid var(--border);
+            background: var(--surface-2);
+            flex-shrink: 0;
+        }
+        .sidebar-brand { display: flex; align-items: center; gap: 9px; }
+        .sidebar-brand img { height: 26px; object-fit: contain; }
+        .sidebar-brand-name {
+            font-family: 'Outfit', sans-serif;
+            font-weight: 800; font-size: 1rem;
+            letter-spacing: -0.03em; color: var(--accent);
+        }
+        .sidebar-close {
+            width: 28px; height: 28px;
+            border-radius: 6px; border: 1px solid var(--border);
+            background: transparent; color: var(--text-3);
+            cursor: pointer; display: flex; align-items: center; justify-content: center;
+            font-size: 0.8rem; transition: 0.15s;
+        }
+        .sidebar-close:hover { background: #FEE2E2; border-color: #FCA5A5; color: #DC2626; }
+
+        .sidebar-section-label {
+            font-size: 0.65rem; font-weight: 700;
+            letter-spacing: 0.1em; text-transform: uppercase;
+            color: var(--text-4);
+            padding: 1.2rem 1.2rem 0.4rem;
+        }
+        .sidebar-nav { padding: 0 0.75rem; display: flex; flex-direction: column; gap: 2px; }
+        .sidebar-link {
+            display: flex; align-items: center; gap: 0.75rem;
+            padding: 0.65rem 0.85rem; border-radius: var(--r-sm);
+            text-decoration: none; font-size: 0.9rem; font-weight: 500;
+            color: var(--text-2); transition: all 0.15s ease;
+            border: 1px solid transparent;
+        }
+        .sidebar-link:hover { background: var(--bg); color: var(--text); }
+        .sidebar-link.active {
+            background: var(--accent-bg); border-color: var(--accent-ring);
+            color: var(--accent); font-weight: 600;
+        }
+        .link-icon {
+            width: 32px; height: 32px; border-radius: 8px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 0.95rem; background: var(--bg-alt); flex-shrink: 0;
+        }
+        .sidebar-link.active .link-icon { background: rgba(79,70,229,0.12); }
+
+        .sidebar-footer {
+            margin-top: auto; padding: 1.2rem;
+            border-top: 1px solid var(--border);
+            background: var(--surface-2); flex-shrink: 0;
+        }
+        .sidebar-footer p { font-size: 0.75rem; color: var(--text-4); }
+        .sidebar-footer a { font-size: 0.75rem; color: var(--accent); text-decoration: none; }
+
+        /* ── MAIN ── */
+        .main-wrap {
+            position: relative; z-index: 1;
+            padding: 80px 1.5rem 3rem;
+            max-width: 1200px; margin: 0 auto;
+        }
+
+        .page-section { display: none; }
+        .page-section.active {
+            display: block;
+            animation: fade-up 0.3s ease;
+        }
+        @keyframes fade-up {
+            from { opacity:0; transform:translateY(14px); }
+            to   { opacity:1; transform:translateY(0); }
+        }
+
+        /* ── PAGE HERO ── */
+        .page-hero {
+            text-align: center; padding: 2.5rem 1rem 2rem;
+        }
+        .hero-logo {
+            height: 64px; max-width: 280px; object-fit: contain;
+            filter: drop-shadow(0 4px 16px rgba(79,70,229,0.2));
+        }
+        .hero-logo-text {
+            font-family: 'Outfit', sans-serif; font-size: 3rem; font-weight: 900;
+            letter-spacing: -0.05em;
+            background: linear-gradient(135deg, #4F46E5 0%, #06B6D4 100%);
+            -webkit-background-clip: text; background-clip: text; color: transparent;
+            display: none;
+        }
+        .hero-tagline {
+            display: inline-flex; align-items: center; gap: 0.5rem;
+            background: var(--surface); border: 1px solid var(--border);
+            border-radius: 40px; padding: 0.35rem 1.1rem;
+            font-size: 0.78rem; font-weight: 600; color: var(--text-3);
+            margin-top: 1rem; box-shadow: var(--shadow-sm);
+        }
+        .hero-tagline .dot {
+            width: 7px; height: 7px; border-radius: 50%;
+            background: linear-gradient(135deg, var(--accent), var(--teal));
+            flex-shrink: 0;
+        }
+        .hero-sub {
+            margin: 0.65rem auto 0; font-size: 0.95rem; color: var(--text-3);
+            max-width: 460px;
+        }
+        .section-heading {
+            font-family: 'Outfit', sans-serif; font-size: 2rem; font-weight: 800;
+            letter-spacing: -0.03em; color: var(--text);
+        }
+
+        /* ── TRUST BADGES ── */
+        .trust-row {
+            display: flex; flex-wrap: wrap; justify-content: center;
+            gap: 0.65rem; margin: 1.4rem 0 2rem;
+        }
+        .badge {
+            display: flex; align-items: center; gap: 0.4rem;
+            background: var(--surface); border: 1px solid var(--border);
+            border-radius: 8px; padding: 0.4rem 0.9rem;
+            font-size: 0.76rem; font-weight: 600; color: var(--text-2);
+            box-shadow: var(--shadow-sm);
+        }
+
+        /* ── CARD ── */
+        .card {
+            background: var(--surface); border: 1px solid var(--border);
+            border-radius: var(--r-xl); padding: 2rem; margin-bottom: 1.75rem;
+            box-shadow: var(--shadow-md);
+        }
+        .card-eyebrow {
+            display: flex; align-items: center; gap: 0.5rem;
+            font-size: 0.7rem; font-weight: 700; letter-spacing: 0.1em;
+            text-transform: uppercase; color: var(--accent); margin-bottom: 1.4rem;
+        }
+        .card-eyebrow::before {
+            content: ''; display: inline-block;
+            width: 18px; height: 3px;
+            background: linear-gradient(90deg, var(--accent), var(--teal));
+            border-radius: 2px;
+        }
+
+        /* ── TOOLBAR ── */
+        .toolbar {
+            display: flex; flex-wrap: wrap; gap: 0.65rem; align-items: center;
+            padding: 1.1rem 1.2rem;
+            background: var(--surface-2); border: 1px solid var(--border);
+            border-radius: var(--r-lg); margin-bottom: 1.5rem;
+        }
+        .btn {
+            display: inline-flex; align-items: center; gap: 0.4rem;
+            padding: 0.5rem 1.05rem; border-radius: var(--r-sm);
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-size: 0.85rem; font-weight: 600; cursor: pointer;
+            transition: all 0.18s ease; white-space: nowrap;
+            border: 1px solid var(--border);
+            background: var(--surface); color: var(--text-2);
+        }
+        .btn:hover { background: var(--bg-alt); border-color: var(--border-2); }
+        .btn-primary {
+            background: var(--accent); border-color: var(--accent); color: #fff;
+        }
+        .btn-primary:hover {
+            background: #4338CA; border-color: #4338CA;
+            box-shadow: 0 4px 14px rgba(79,70,229,0.35); transform: translateY(-1px);
+        }
+        .btn-primary:disabled {
+            background: var(--bg-alt); border-color: var(--border);
+            color: var(--text-4); cursor: not-allowed; box-shadow: none; transform: none;
+        }
+        .btn-outline {
+            background: var(--accent-bg); border-color: var(--accent-ring); color: var(--accent);
+        }
+        .btn-outline:hover { background: rgba(79,70,229,0.13); }
+
+        .color-group {
+            display: flex; align-items: center; gap: 0.5rem;
+            background: var(--surface); border: 1px solid var(--border);
+            border-radius: var(--r-sm); padding: 0.4rem 0.75rem;
+            font-size: 0.82rem; color: var(--text-3); font-weight: 500;
+        }
+        input[type="color"] {
+            width: 30px; height: 30px; border-radius: 6px;
+            border: 2px solid var(--border-2); cursor: pointer; padding: 2px;
+            background: transparent;
+        }
+        .tol-group {
+            display: flex; align-items: center; gap: 0.6rem;
+            background: var(--surface); border: 1px solid var(--border);
+            border-radius: var(--r-sm); padding: 0.4rem 0.85rem;
+            font-size: 0.82rem; color: var(--text-3); font-weight: 500;
+        }
+        .tol-group input[type="range"] { width: 100px; accent-color: var(--accent); }
+        .tol-val {
+            font-family: 'JetBrains Mono', monospace; font-size: 0.82rem;
+            color: var(--accent); min-width: 24px; font-weight: 500;
+        }
+
+        /* ── CANVAS ── */
+        .canvas-grid {
+            display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem;
+        }
+        @media (max-width: 680px) { .canvas-grid { grid-template-columns: 1fr; } }
+        .canvas-panel {
+            border: 1px solid var(--border); border-radius: var(--r-lg);
+            overflow: hidden; background: var(--surface); box-shadow: var(--shadow-sm);
+        }
+        .canvas-head {
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 0.7rem 1rem; border-bottom: 1px solid var(--border);
+            background: var(--surface-2);
+        }
+        .canvas-head h3 {
+            font-family: 'Outfit', sans-serif; font-size: 0.78rem; font-weight: 700;
+            letter-spacing: 0.06em; text-transform: uppercase; color: var(--text-3);
+        }
+        .canvas-tag {
+            font-size: 0.68rem; font-weight: 600; padding: 0.18rem 0.55rem;
+            border-radius: 20px; background: var(--accent-bg); color: var(--accent);
+            border: 1px solid var(--accent-ring);
+        }
+        .canvas-body {
+            background: repeating-conic-gradient(#EDF0F7 0% 25%, #F4F6FB 0% 50%) 50% / 16px 16px;
+            min-height: 220px; display: flex; align-items: center; justify-content: center;
+            padding: 0.75rem;
+        }
+        .canvas-body.result-bg {
+            background: repeating-conic-gradient(#DBEAFE 0% 25%, #EFF6FF 0% 50%) 50% / 16px 16px;
+        }
+        .canvas-body canvas { max-width:100%; height:auto; border-radius:6px; display:block; }
+        .canvas-foot {
+            padding: 0.55rem 1rem; font-size: 0.74rem; color: var(--text-4);
+            border-top: 1px solid var(--border); background: var(--surface-2);
+        }
+        .status-bar {
+            display: flex; align-items: center; gap: 0.6rem;
+            background: var(--surface-2); border: 1px solid var(--border);
+            border-radius: var(--r-sm); padding: 0.6rem 1rem; margin-top: 1.1rem;
+            font-size: 0.82rem; color: var(--text-3);
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        /* ── ABOUT ── */
+        .about-grid {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+            gap: 1.1rem; margin: 1.5rem 0;
+        }
+        .about-card {
+            background: var(--surface-2); border: 1px solid var(--border);
+            border-radius: var(--r-md); padding: 1.3rem; transition: all 0.2s ease;
+        }
+        .about-card:hover {
+            border-color: var(--accent-ring);
+            box-shadow: 0 4px 20px rgba(79,70,229,0.1); transform: translateY(-2px);
+        }
+        .about-icon {
+            width: 40px; height: 40px; border-radius: 10px;
+            background: var(--accent-bg); border: 1px solid var(--accent-ring);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.1rem; margin-bottom: 0.85rem;
+        }
+        .about-card h4 {
+            font-family: 'Outfit', sans-serif; font-size: 0.9rem; font-weight: 700;
+            color: var(--text); margin-bottom: 0.3rem;
+        }
+        .about-card p { font-size: 0.83rem; color: var(--text-3); line-height: 1.6; }
+        .privacy-box {
+            display: flex; align-items: flex-start; gap: 1rem;
+            background: linear-gradient(135deg, rgba(79,70,229,0.05), rgba(8,145,178,0.05));
+            border: 1px solid rgba(79,70,229,0.2); border-radius: var(--r-md);
+            padding: 1.25rem 1.4rem; margin-top: 1.5rem;
+        }
+        .privacy-box .pi { font-size: 1.5rem; flex-shrink:0; margin-top:1px; }
+        .privacy-box p { font-size: 0.87rem; color: var(--text-2); line-height: 1.75; }
+        .privacy-box strong { color: var(--accent); }
+
+        /* ── CONTACT ── */
+        .contact-layout {
+            display: grid; grid-template-columns: 260px 1fr; gap: 2rem;
+        }
+        @media (max-width: 680px) { .contact-layout { grid-template-columns: 1fr; } }
+        .contact-info { display: flex; flex-direction: column; gap: 0.85rem; }
+        .ci-item {
+            display: flex; align-items: flex-start; gap: 0.75rem;
+            background: var(--surface-2); border: 1px solid var(--border);
+            border-radius: var(--r-md); padding: 1rem;
+        }
+        .ci-icon {
+            width: 34px; height: 34px; border-radius: 8px;
+            background: var(--accent-bg); border: 1px solid var(--accent-ring);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 0.95rem; flex-shrink: 0;
+        }
+        .ci-item h5 {
+            font-size: 0.7rem; font-weight: 700; text-transform: uppercase;
+            letter-spacing: 0.08em; color: var(--text-4); margin-bottom: 0.2rem;
+        }
+        .ci-item p, .ci-item a { font-size: 0.84rem; color: var(--text-2); text-decoration: none; }
+        .ci-item a:hover { color: var(--accent); }
+        .cform { display: flex; flex-direction: column; gap: 0.85rem; }
+        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 0.85rem; }
+        @media (max-width: 480px) { .form-row { grid-template-columns: 1fr; } }
+        .fgroup { display: flex; flex-direction: column; gap: 0.35rem; }
+        .fgroup label {
+            font-size: 0.73rem; font-weight: 700; text-transform: uppercase;
+            letter-spacing: 0.07em; color: var(--text-3);
+        }
+        .fgroup input, .fgroup textarea {
+            background: var(--surface-2); border: 1px solid var(--border);
+            border-radius: var(--r-sm); padding: 0.65rem 0.9rem; color: var(--text);
+            font-family: 'Plus Jakarta Sans', sans-serif; font-size: 0.9rem;
+            outline: none; transition: border-color 0.2s, box-shadow 0.2s;
+        }
+        .fgroup input::placeholder, .fgroup textarea::placeholder { color: var(--text-4); }
+        .fgroup input:focus, .fgroup textarea:focus {
+            border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-ring);
+            background: var(--surface);
+        }
+        .fgroup textarea { resize: vertical; min-height: 125px; }
+        .form-status { padding: 0.6rem 0.85rem; border-radius: var(--r-sm); font-size: 0.84rem; text-align: center; }
+
+        /* ── FOOTER ── */
+        footer {
+            text-align: center; padding: 2rem 0 1.25rem;
+            border-top: 1px solid var(--border); margin-top: 1.5rem;
+        }
+        .footer-brand {
+            display: flex; align-items: center; justify-content: center; gap: 8px;
+            margin-bottom: 0.5rem;
+        }
+        .footer-brand img { height: 22px; object-fit: contain; opacity: 0.6; }
+        .footer-brand-name {
+            font-family: 'Outfit', sans-serif; font-weight: 800; font-size: 0.9rem;
+            letter-spacing: -0.03em; color: var(--text-3);
+        }
+        footer p { font-size: 0.77rem; color: var(--text-4); }
+        footer a { font-size: 0.77rem; color: var(--accent); text-decoration: none; }
+        footer a:hover { text-decoration: underline; }
+
+        @media (max-width: 580px) {
+            .card { padding: 1.25rem; border-radius: var(--r-lg); }
+            .toolbar { padding: 0.9rem; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- TOP BAR -->
+<header class="topbar">
+    <button class="menu-btn" id="menuBtn" aria-label="Open menu">
+        <svg width="16" height="16" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round">
+            <line x1="2" y1="4.5" x2="16" y2="4.5"/>
+            <line x1="2" y1="9"   x2="16" y2="9"/>
+            <line x1="2" y1="13.5" x2="16" y2="13.5"/>
+        </svg>
+    </button>
+    <div class="topbar-logo" id="topbarLogo">
+        <img src="Chromacut.png" alt="ChromaCut"
+             onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">
+        <span class="topbar-logo-text" style="display:none;">ChromaCut</span>
+    </div>
+    <div class="topbar-right">
+        <div class="topbar-pill">
+            <span class="pill-dot"></span>
+            <span>100% Private · Free</span>
+        </div>
+    </div>
+</header>
+
+<!-- OVERLAY -->
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+<!-- SIDEBAR -->
+<nav class="sidebar" id="sidebar" aria-label="Main navigation">
+    <div class="sidebar-top">
+        <div class="sidebar-brand">
+            <img src="Chromacut.png" alt="ChromaCut"
+                 onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">
+            <span class="sidebar-brand-name" style="display:none;">ChromaCut</span>
+        </div>
+        <button class="sidebar-close" id="sidebarClose" aria-label="Close">✕</button>
+    </div>
+
+    <div class="sidebar-section-label">Menu</div>
+
+    <div class="sidebar-nav">
+        <a href="#" class="sidebar-link active" data-page="home">
+            <span class="link-icon">🏠</span><span>Home</span>
+        </a>
+        <a href="#" class="sidebar-link" data-page="about">
+            <span class="link-icon">📖</span><span>About</span>
+        </a>
+        <a href="#" class="sidebar-link" data-page="contact">
+            <span class="link-icon">✉️</span><span>Contact</span>
+        </a>
+    </div>
+
+    <div class="sidebar-footer">
+        <p>RDJ Publishers · 2026</p>
+        <a href="https://rdjpublishers.github.io/" target="_blank">rdjpublishers.github.io ↗</a>
+    </div>
+</nav>
+
+<!-- MAIN -->
+<div class="main-wrap">
+
+    <!-- HOME -->
+    <div id="home-section" class="page-section active">
+        <div class="page-hero">
+            <img src="Chromacut.png" alt="ChromaCut" class="hero-logo"
+                 onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">
+            <div class="hero-logo-text">ChromaCut</div>
+            <div class="hero-tagline">
+                <span class="dot"></span>
+                Solid Background Remover &nbsp;·&nbsp; No Upload &nbsp;·&nbsp; 100% Private
+            </div>
+            <p class="hero-sub">Upload an image, pick the background color, adjust tolerance — get a clean transparent PNG instantly.</p>
+        </div>
+
+        <div class="trust-row">
+            <div class="badge">🔒 Runs in your browser</div>
+            <div class="badge">⚡ Instant processing</div>
+            <div class="badge">🆓 Always free</div>
+            <div class="badge">📵 No sign-up needed</div>
+        </div>
+
+        <div class="card">
+            <div class="card-eyebrow">Background Removal Tool</div>
+            <div class="toolbar">
+                <label class="btn" style="cursor:pointer;">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                    Load Image
+                    <input type="file" id="upload" accept="image/*" style="display:none">
+                </label>
+                <button id="pickColorBtn" class="btn btn-outline">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3l3.5 3.5"/><path d="M20.4 7.5a1.4 1.4 0 00-2-2L6.5 17.4a1 1 0 000 1.4l1.2 1.2a1 1 0 001.4 0L20.4 7.5z"/></svg>
+                    Pick Color
+                </button>
+                <div class="color-group">
+                    <span>Color</span>
+                    <input type="color" id="colorPicker" value="#ffffff">
+                </div>
+                <div class="tol-group">
+                    <span>Tolerance</span>
+                    <input type="range" id="tolerance" min="0" max="100" value="35">
+                    <span class="tol-val" id="toleranceVal">35</span>
+                </div>
+                <button id="removeBgBtn" class="btn btn-primary">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/></svg>
+                    Remove Background
+                </button>
+                <button id="downloadBtn" class="btn btn-primary" disabled>
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                    Download PNG
+                </button>
+            </div>
+
+            <div class="canvas-grid">
+                <div class="canvas-panel">
+                    <div class="canvas-head">
+                        <h3>Original Image</h3><span class="canvas-tag">Source</span>
+                    </div>
+                    <div class="canvas-body">
+                        <canvas id="origCanvas" width="500" height="400"></canvas>
+                    </div>
+                    <div class="canvas-foot">Click "Pick Color" then tap the background in this image</div>
+                </div>
+                <div class="canvas-panel">
+                    <div class="canvas-head">
+                        <h3>Transparent Result</h3><span class="canvas-tag">Output PNG</span>
+                    </div>
+                    <div class="canvas-body result-bg">
+                        <canvas id="resultCanvas" width="500" height="400"></canvas>
+                    </div>
+                    <div class="canvas-foot">Checkerboard = transparent areas</div>
+                </div>
+            </div>
+
+            <div class="status-bar" id="toolStatus">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                Ready — load an image to get started
+            </div>
+        </div>
+    </div>
+
+    <!-- ABOUT -->
+    <div id="about-section" class="page-section">
+        <div class="page-hero">
+            <div class="section-heading">About ChromaCut</div>
+            <div class="hero-tagline"><span class="dot"></span>Crafting tools people actually use</div>
+        </div>
+        <div class="card">
+            <p style="color:var(--text-2); line-height:1.8; margin-bottom:1.5rem;">
+                <strong>RDJ Publishers</strong> is an independent web studio dedicated to building free, fast, and privacy‑respecting tools for students, professionals, and everyday users — with zero sign‑ups and zero costs.
+            </p>
+            <div class="about-grid">
+                <div class="about-card"><div class="about-icon">👥</div><h4>Who We Are</h4><p>An independent web publishing studio building practical, free‑to‑use web apps for everyone.</p></div>
+                <div class="about-card"><div class="about-icon">🎯</div><h4>Our Mission</h4><p>Democratise access to productivity tools with browser‑based utilities that work on any device, any data plan.</p></div>
+                <div class="about-card"><div class="about-icon">💰</div><h4>Always Free</h4><p>No hidden paywalls, no freemium limits, no forced sign‑ups. Supported by non‑intrusive advertising.</p></div>
+                <div class="about-card"><div class="about-icon">🚀</div><h4>Always Evolving</h4><p>Regularly add new tools. We read every feature request and bug report.</p></div>
+            </div>
+            <div class="privacy-box">
+                <div class="pi">🔒</div>
+                <p><strong>Privacy first, always.</strong><br>All tools process your data entirely inside your browser. Nothing is ever sent to any server, stored, or seen by anyone else. Your files stay on your device — always.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- CONTACT -->
+    <div id="contact-section" class="page-section">
+        <div class="page-hero">
+            <div class="section-heading">Get in Touch</div>
+            <div class="hero-tagline"><span class="dot"></span>Questions, bug reports, feature requests — we read every message</div>
+        </div>
+        <div class="card">
+            <div class="contact-layout">
+                <div class="contact-info">
+                    <div class="ci-item"><div class="ci-icon">📧</div><div><h5>Email</h5><a href="mailto:rdjpublishers@gmail.com">rdjpublishers@gmail.com</a></div></div>
+                    <div class="ci-item"><div class="ci-icon">🌐</div><div><h5>Website</h5><a href="https://rdjpublishers.github.io/" target="_blank">rdjpublishers.github.io</a></div></div>
+                    <div class="ci-item"><div class="ci-icon">⏱️</div><div><h5>Response Time</h5><p>Usually within 24–48 hours</p></div></div>
+                </div>
+                <form id="contactForm" class="cform">
+                    <input type="hidden" name="access_key" value="b8e73ebb-4cd4-45ae-aa44-5a9725856c03">
+                    <div class="form-row">
+                        <div class="fgroup"><label>Your Name *</label><input type="text" name="name" placeholder="John Doe" required></div>
+                        <div class="fgroup"><label>Email Address *</label><input type="email" name="email" placeholder="you@email.com" required></div>
+                    </div>
+                    <div class="fgroup"><label>Subject</label><input type="text" name="subject" placeholder="e.g. Feature request, Bug report…"></div>
+                    <div class="fgroup"><label>Message *</label><textarea name="message" placeholder="Tell us what's on your mind…" required></textarea></div>
+                    <button type="submit" class="btn btn-primary" style="align-self:flex-start; padding:0.6rem 1.5rem;">
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+                        Send Message
+                    </button>
+                    <div id="formStatus" class="form-status"></div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="footer-brand">
+            <img src="Chromacut.png" alt="ChromaCut" onerror="this.style.display='none'">
+            <span class="footer-brand-name">ChromaCut</span>
+        </div>
+        <p>© 2026 RDJ Publishers &nbsp;·&nbsp; Solid Background Remover &nbsp;·&nbsp; No data leaves your device</p>
+        <a href="https://rdjpublishers.github.io/" target="_blank">rdjpublishers.github.io</a>
+    </footer>
+</div>
+
+<script>
+    /* ─── SIDEBAR — FIXED ───
+       Root cause of the old bug: the document-level click listener
+       was firing on the SAME click that opened the sidebar, immediately
+       closing it again. Fix: stopPropagation on the menu button so the
+       document listener never sees the toggle click. Close via the
+       dedicated overlay instead of document. */
+
+    const menuBtn        = document.getElementById('menuBtn');
+    const sidebar        = document.getElementById('sidebar');
+    const sidebarOverlay = document.getElementById('sidebarOverlay');
+    const sidebarClose   = document.getElementById('sidebarClose');
+
+    function openSidebar() {
+        sidebar.classList.add('open');
+        sidebarOverlay.classList.add('visible');
+        document.body.style.overflow = 'hidden';
+    }
+    function closeSidebar() {
+        sidebar.classList.remove('open');
+        sidebarOverlay.classList.remove('visible');
+        document.body.style.overflow = '';
+    }
+
+    menuBtn.addEventListener('click', function(e) {
+        e.stopPropagation();  // prevents document listener from firing
+        sidebar.classList.contains('open') ? closeSidebar() : openSidebar();
+    });
+    sidebarClose.addEventListener('click', closeSidebar);
+    sidebarOverlay.addEventListener('click', closeSidebar);
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeSidebar(); });
+
+    /* ─── NAVIGATION ─── */
+    const sections = {
+        home:    document.getElementById('home-section'),
+        about:   document.getElementById('about-section'),
+        contact: document.getElementById('contact-section')
+    };
+    const navLinks = document.querySelectorAll('.sidebar-link');
+
+    function showSection(id) {
+        Object.values(sections).forEach(s => s.classList.remove('active'));
+        sections[id].classList.add('active');
+        navLinks.forEach(l => {
+            l.classList.remove('active');
+            if (l.dataset.page === id) l.classList.add('active');
+        });
+        closeSidebar();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    navLinks.forEach(link => {
+        link.addEventListener('click', (e) => {
+            e.preventDefault();
+            showSection(link.dataset.page);
+        });
+    });
+
+    document.getElementById('topbarLogo').addEventListener('click', () => showSection('home'));
+
+    /* ─── TOOL ─── */
+    const uploadInput     = document.getElementById('upload');
+    const origCanvas      = document.getElementById('origCanvas');
+    const resultCanvas    = document.getElementById('resultCanvas');
+    const pickColorBtn    = document.getElementById('pickColorBtn');
+    const colorPicker     = document.getElementById('colorPicker');
+    const toleranceSlider = document.getElementById('tolerance');
+    const toleranceVal    = document.getElementById('toleranceVal');
+    const removeBgBtn     = document.getElementById('removeBgBtn');
+    const downloadBtn     = document.getElementById('downloadBtn');
+    const toolStatus      = document.getElementById('toolStatus');
+
+    let originalImageData = null;
+    let selectedColor = { r: 255, g: 255, b: 255 };
+
+    function setStatus(msg) { toolStatus.innerHTML = msg; }
+
+    function loadImage(file) {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            const img = new Image();
+            img.onload = () => {
+                origCanvas.width = img.width; origCanvas.height = img.height;
+                resultCanvas.width = img.width; resultCanvas.height = img.height;
+                const ctx = origCanvas.getContext('2d');
+                ctx.drawImage(img, 0, 0);
+                originalImageData = ctx.getImageData(0, 0, img.width, img.height);
+                downloadBtn.disabled = true;
+                resultCanvas.getContext('2d').clearRect(0, 0, resultCanvas.width, resultCanvas.height);
+                setStatus('✅ Image loaded — click "Pick Color" then tap the background, or choose a color manually.');
+            };
+            img.src = e.target.result;
+        };
+        reader.readAsDataURL(file);
+    }
+
+    uploadInput.addEventListener('change', (e) => { if (e.target.files[0]) loadImage(e.target.files[0]); });
+
+    const toolCard = document.querySelector('.card');
+    toolCard.addEventListener('dragover', (e) => e.preventDefault());
+    toolCard.addEventListener('drop', (e) => {
+        e.preventDefault();
+        const file = e.dataTransfer.files[0];
+        if (file && file.type.startsWith('image/')) loadImage(file);
+        else setStatus('❌ Not a valid image file.');
+    });
+
+    pickColorBtn.addEventListener('click', () => {
+        if (!originalImageData) { setStatus('⚠️ Load an image first.'); return; }
+        setStatus('🔍 Click on the background area in the Original image to sample its color.');
+        origCanvas.style.cursor = 'crosshair';
+        origCanvas.addEventListener('click', function pickHandler(e) {
+            const rect = origCanvas.getBoundingClientRect();
+            const x = (e.clientX - rect.left) * (origCanvas.width / rect.width);
+            const y = (e.clientY - rect.top)  * (origCanvas.height / rect.height);
+            if (x >= 0 && x < origCanvas.width && y >= 0 && y < origCanvas.height) {
+                const px = origCanvas.getContext('2d').getImageData(x|0, y|0, 1, 1).data;
+                selectedColor = { r: px[0], g: px[1], b: px[2] };
+                colorPicker.value = '#' + [px[0],px[1],px[2]].map(v => v.toString(16).padStart(2,'0')).join('');
+                setStatus(`🎨 Color sampled — rgb(${selectedColor.r}, ${selectedColor.g}, ${selectedColor.b}). Now click "Remove Background".`);
+                origCanvas.style.cursor = 'default';
+                origCanvas.removeEventListener('click', pickHandler);
+            }
+        });
+    });
+
+    colorPicker.addEventListener('input', (e) => {
+        const h = e.target.value;
+        selectedColor = { r: parseInt(h.slice(1,3),16), g: parseInt(h.slice(3,5),16), b: parseInt(h.slice(5,7),16) };
+        setStatus(`🎨 Manual color — rgb(${selectedColor.r}, ${selectedColor.g}, ${selectedColor.b}).`);
+    });
+
+    toleranceSlider.addEventListener('input', () => { toleranceVal.textContent = toleranceSlider.value; });
+
+    removeBgBtn.addEventListener('click', () => {
+        if (!originalImageData) { setStatus('⚠️ Load an image first.'); return; }
+        const tol = parseInt(toleranceSlider.value);
+        const w = originalImageData.width, h = originalImageData.height;
+        const src = originalImageData.data;
+        const rCtx = resultCanvas.getContext('2d');
+        const rImg = rCtx.createImageData(w, h);
+        const dst  = rImg.data;
+        for (let i = 0; i < src.length; i += 4) {
+            const diff = Math.abs(src[i]-selectedColor.r) + Math.abs(src[i+1]-selectedColor.g) + Math.abs(src[i+2]-selectedColor.b);
+            dst[i]=src[i]; dst[i+1]=src[i+1]; dst[i+2]=src[i+2];
+            dst[i+3] = diff < tol * 3 ? 0 : src[i+3];
+        }
+        rCtx.putImageData(rImg, 0, 0);
+        downloadBtn.disabled = false;
+        setStatus(`✅ Done! Background removed (tolerance ${tol}) — click "Download PNG" to save.`);
+    });
+
+    downloadBtn.addEventListener('click', () => {
+        if (!resultCanvas.width) return;
+        const a = document.createElement('a');
+        a.download = 'chromacut_transparent.png';
+        a.href = resultCanvas.toDataURL('image/png');
+        a.click();
+        setStatus('📁 Download started — check your downloads folder.');
+    });
+
+    /* ─── CONTACT FORM ─── */
+    const contactForm = document.getElementById('contactForm');
+    const formStatus  = document.getElementById('formStatus');
+
+    contactForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        formStatus.textContent = 'Sending…';
+        formStatus.style.color = 'var(--text-3)';
+        try {
+            const res  = await fetch('https://api.web3forms.com/submit', { method:'POST', body: new FormData(contactForm) });
+            const data = await res.json();
+            if (data.success) {
+                formStatus.textContent = "✅ Message sent! We'll reply within 24–48 hours.";
+                formStatus.style.color = '#16A34A';
+                contactForm.reset();
+            } else {
+                formStatus.textContent = '❌ Submission failed. Please email rdjpublishers@gmail.com';
+                formStatus.style.color = '#DC2626';
+            }
+        } catch {
+            formStatus.textContent = '❌ Network error. Please email rdjpublishers@gmail.com directly.';
+            formStatus.style.color = '#DC2626';
+        }
+    });
+</script>
+</body>
+</html>
