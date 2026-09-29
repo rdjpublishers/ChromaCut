@@ -580,6 +580,21 @@
             .toolbar { padding: 0.9rem; }
         }
     </style>
+
+<style id="rdj-guide-css">
+.rdj-guide{max-width:860px;margin:2.5rem auto 2.5rem;padding:0 1.25rem;color:var(--text);line-height:1.75}
+.rdj-guide h2{font-size:1.4rem;font-weight:700;margin:2rem 0 .75rem;color:var(--text)}
+.rdj-guide h2:first-child{margin-top:0}
+.rdj-guide h3{font-size:1.02rem;font-weight:700;margin:1.25rem 0 .35rem;color:var(--text)}
+.rdj-guide p{font-size:.94rem;color:var(--text-2);margin:0 0 .85rem}
+.rdj-guide ul,.rdj-guide ol{margin:0 0 1rem 1.25rem;padding:0}
+.rdj-guide li{font-size:.93rem;color:var(--text-2);margin-bottom:.4rem}
+.rdj-guide strong{color:var(--text)}
+.rdj-guide .rdj-faq{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-md);padding:.9rem 1.15rem;margin-bottom:.7rem}
+.rdj-guide .rdj-faq h3{margin:0 0 .3rem;font-size:.97rem}
+.rdj-guide .rdj-faq p{margin:0}
+.rdj-guide a{color:var(--accent)}
+</style>
 </head>
 <body>
 
@@ -727,6 +742,49 @@
                 Ready — load an image to get started
             </div>
         </div>
+
+        <!-- RDJ original guide content -->
+        <article class="rdj-guide" aria-labelledby="cc-guide-title">
+            <h2 id="cc-guide-title">About ChromaCut</h2>
+            <p>ChromaCut removes a solid-colour background from an image and gives you a transparent PNG. You choose the colour to remove, adjust how strict the match should be, and the tool clears every pixel that falls inside that range. It works best on pictures shot against a plain backdrop, such as product photos on white, logos on a flat colour, signatures on paper, or green-screen style shots.</p>
+            <p>Everything happens in your browser through the HTML5 Canvas API. Your image is not uploaded to our servers, which is useful for client work and private photos.</p>
+
+            <h2>How to remove a background, step by step</h2>
+            <ol>
+                <li><strong>Load your image.</strong> Choose a file from your device. JPG, PNG, WebP, GIF, BMP and other formats your browser can open are accepted.</li>
+                <li><strong>Pick the background colour.</strong> Press Pick Color, then tap or click the background in the Original Image panel. You can also choose a colour with the colour input.</li>
+                <li><strong>Set the tolerance.</strong> The slider runs from 0 to 100. At 0 only pixels that match the chosen colour exactly are removed. Higher values remove a wider range of similar shades.</li>
+                <li><strong>Press Remove Background.</strong> The Transparent Result panel shows the outcome. A checkerboard pattern marks the transparent areas.</li>
+                <li><strong>Download the PNG.</strong> Save the result. The output is always PNG because it supports transparency.</li>
+            </ol>
+
+            <h2>Choosing the right tolerance</h2>
+            <p>A value between 25 and 45 suits most images. If patches of background remain, raise the tolerance a little. If parts of your subject start to disappear, lower it. Photos taken in uneven light contain many shades of the same background, so they usually need a higher setting than a flat digital graphic.</p>
+
+            <h2>Tips for cleaner results</h2>
+            <ul>
+                <li>Start with an evenly lit picture. Shadows and gradients create extra shades that a single colour pick cannot cover.</li>
+                <li>If the subject has a similar colour to the background, for example a white product on white paper, expect some of the subject to be removed as well.</li>
+                <li>Pick the background colour from the area closest to your subject, since that is the shade you most need to match.</li>
+                <li>Use a lossless source such as PNG when possible. JPG compression leaves fuzzy pixels around edges that can survive removal.</li>
+                <li>Preview the result on both a light and a dark page before you use it.</li>
+            </ul>
+
+            <h2>What ChromaCut is not</h2>
+            <p>ChromaCut is a colour-based remover, not an artificial-intelligence cut-out tool. It cannot separate a subject from a busy scene with many colours, such as a person standing in front of trees. For that kind of picture, use a dedicated photo editor. For solid or near-solid backgrounds it is fast and predictable.</p>
+
+            <h2>Troubleshooting</h2>
+            <p>If your downloaded PNG still shows a background, check that you pressed Remove Background after picking the colour, and try a slightly higher tolerance. If the image looks jagged, the source is probably compressed or low resolution. If a very large image feels slow, resize it first, because processing large pictures uses more memory on phones and older computers.</p>
+
+            <h2>Frequently asked questions</h2>
+            <div class="rdj-faq"><h3>Does ChromaCut upload my image anywhere?</h3><p>No. Everything runs in your browser using the HTML5 Canvas API, and your image stays on your device. The page loads Google Analytics and Google AdSense, which use cookies. See the <a href="https://rdjpublishers.com/privacy-policy.html">Privacy Policy</a> for details.</p></div>
+            <div class="rdj-faq"><h3>What image formats are supported?</h3><p>Any format your browser can open, including JPG, PNG, WebP, GIF and BMP. The output is always a transparent PNG.</p></div>
+            <div class="rdj-faq"><h3>How does the tolerance slider work?</h3><p>Tolerance controls how broadly the chosen colour is matched. At 0 only exact matches are removed. At 100 a wide range of similar shades is erased. Try 25 to 45 for most images.</p></div>
+            <div class="rdj-faq"><h3>Can I remove a complex or gradient background?</h3><p>ChromaCut is designed for solid or near-solid backgrounds such as white or green screen. Gradients and busy scenes will not come out cleanly with one colour pick.</p></div>
+            <div class="rdj-faq"><h3>My downloaded PNG still has a background. What happened?</h3><p>Make sure you pressed Remove Background after picking the colour, and try increasing the tolerance slightly. Also check that you are viewing the file in an app that shows transparency.</p></div>
+            <div class="rdj-faq"><h3>Is ChromaCut free?</h3><p>Yes. It is free to use and needs no sign-up.</p></div>
+        </article>
+
     </div>
 
     <!-- ABOUT -->
@@ -783,14 +841,6 @@
         </div>
     </div>
 
-    <!-- FAQ SECTION -->
-    <div id="faq-section" style="max-width:760px; margin: 0 auto 2.5rem;">
-        <div style="text-align:center; margin-bottom:1.5rem;">
-            <div class="section-heading" style="font-size:1.6rem;">Frequently Asked Questions</div>
-            <p style="color:var(--text-3); font-size:0.9rem; margin-top:0.4rem;">Everything you need to know about ChromaCut</p>
-        </div>
-        <div id="faqList" style="display:flex; flex-direction:column; gap:0.75rem;"></div>
-    </div>
 
     <footer>
         <div class="footer-brand">
@@ -981,34 +1031,6 @@
         setStatus('📁 Download started — check your downloads folder.');
     });
 
-    /* ─── FAQ ─── */
-    const faqs = [
-        { q: "Does ChromaCut upload my image anywhere?", a: "No. Everything runs entirely in your browser using the HTML5 Canvas API. Your image never leaves your device." },
-        { q: "What image formats are supported?", a: "You can load any format your browser supports — JPG, PNG, WebP, GIF, BMP, and more. The output is always a transparent PNG." },
-        { q: "How does the tolerance slider work?", a: "Tolerance controls how broadly the color is matched. At 0 only exact pixels are removed; at 100 a wide range of similar shades are erased. Try 25–45 for most images." },
-        { q: "Can I remove a complex or gradient background?", a: "ChromaCut is optimised for solid or near-solid color backgrounds (white, green-screen, etc.). For complex or mixed backgrounds, try adjusting the tolerance or use the color picker on multiple areas." },
-        { q: "Is ChromaCut really free?", a: "Yes — always free, no sign-up, no limits. The tool is supported by non-intrusive ads. We will never charge for basic usage." },
-        { q: "My downloaded PNG still has a background. What happened?", a: "Make sure you clicked 'Remove Background' after picking the color, and check that the correct canvas area was processed. If the background remains, try slightly increasing the tolerance." }
-    ];
-    const faqList = document.getElementById('faqList');
-    if (faqList) {
-        faqs.forEach((item, i) => {
-            const el = document.createElement('div');
-            el.style.cssText = 'background:var(--surface);border:1px solid var(--border);border-radius:var(--r-md);overflow:hidden;box-shadow:var(--shadow-sm);';
-            el.innerHTML = `<button onclick="this.parentElement.classList.toggle('open')" style="width:100%;text-align:left;padding:1rem 1.2rem;background:none;border:none;cursor:pointer;font-family:inherit;font-size:0.9rem;font-weight:600;color:var(--text);display:flex;justify-content:space-between;align-items:center;gap:1rem;">
-                <span>${item.q}</span><span style="font-size:1.1rem;transition:transform 0.2s;flex-shrink:0;" class="faq-arrow">＋</span>
-            </button>
-            <div class="faq-body" style="display:none;padding:0 1.2rem 1rem;font-size:0.87rem;color:var(--text-2);line-height:1.7;">${item.a}</div>`;
-            el.querySelector('button').addEventListener('click', function() {
-                const body = el.querySelector('.faq-body');
-                const arrow = el.querySelector('.faq-arrow');
-                const open = body.style.display === 'block';
-                body.style.display = open ? 'none' : 'block';
-                arrow.textContent = open ? '＋' : '－';
-            });
-            faqList.appendChild(el);
-        });
-    }
 
     /* ─── CONTACT FORM ─── */
     const contactForm = document.getElementById('contactForm');
