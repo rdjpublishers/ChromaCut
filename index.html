@@ -583,7 +583,8 @@
 
 <style id="rdj-guide-css">
 .rdj-guide{max-width:860px;margin:2.5rem auto 2.5rem;padding:0 1.25rem;color:var(--text);line-height:1.75}
-.rdj-guide h2{font-size:1.4rem;font-weight:700;margin:2rem 0 .75rem;color:var(--text)}
+.rdj-guide h1,.rdj-guide h2{font-size:1.4rem;font-weight:700;margin:2rem 0 .75rem;color:var(--text)}
+.rdj-guide h1{margin:0 0 .75rem}
 .rdj-guide h2:first-child{margin-top:0}
 .rdj-guide h3{font-size:1.02rem;font-weight:700;margin:1.25rem 0 .35rem;color:var(--text)}
 .rdj-guide p{font-size:.94rem;color:var(--text-2);margin:0 0 .85rem}
@@ -745,44 +746,67 @@
 
         <!-- RDJ original guide content -->
         <article class="rdj-guide" aria-labelledby="cc-guide-title">
-            <h2 id="cc-guide-title">About ChromaCut</h2>
-            <p>ChromaCut removes a solid-colour background from an image and gives you a transparent PNG. You choose the colour to remove, adjust how strict the match should be, and the tool clears every pixel that falls inside that range. It works best on pictures shot against a plain backdrop, such as product photos on white, logos on a flat colour, signatures on paper, or green-screen style shots.</p>
-            <p>Everything happens in your browser through the HTML5 Canvas API. Your image is not uploaded to our servers, which is useful for client work and private photos.</p>
+            <h1 id="cc-guide-title">What is ChromaCut?</h1>
+            <p>ChromaCut is a free tool that turns a solid-colour background into transparency. You load a picture, choose the colour you want gone, set how strict the match should be, and download the result as a PNG. It works best on images with a plain, even backdrop: a product on white, a logo on a flat colour, a signature on paper, or a subject in front of a green screen. It is a colour-based remover, so it does not try to "understand" the picture. It simply clears every pixel that is close enough to the colour you chose.</p>
 
-            <h2>How to remove a background, step by step</h2>
+            <h2>How to use ChromaCut</h2>
             <ol>
-                <li><strong>Load your image.</strong> Choose a file from your device. JPG, PNG, WebP, GIF, BMP and other formats your browser can open are accepted.</li>
-                <li><strong>Pick the background colour.</strong> Press Pick Color, then tap or click the background in the Original Image panel. You can also choose a colour with the colour input.</li>
-                <li><strong>Set the tolerance.</strong> The slider runs from 0 to 100. At 0 only pixels that match the chosen colour exactly are removed. Higher values remove a wider range of similar shades.</li>
-                <li><strong>Press Remove Background.</strong> The Transparent Result panel shows the outcome. A checkerboard pattern marks the transparent areas.</li>
-                <li><strong>Download the PNG.</strong> Save the result. The output is always PNG because it supports transparency.</li>
+                <li><strong>Load your image.</strong> Click Load Image and pick a file, or drag one onto the tool. Common formats such as JPG, PNG and WebP work.</li>
+                <li><strong>Choose the background colour.</strong> Click Pick Color, then click the background in the Original Image panel. The colour box updates to match. You can also choose a colour by hand.</li>
+                <li><strong>Set the tolerance.</strong> The slider goes from 0 to 100. Higher values remove a wider range of similar shades. The default of 35 is a good start.</li>
+                <li><strong>Click Remove Background.</strong> The Transparent Result panel shows the outcome, with a checkerboard where the image is now see-through.</li>
+                <li><strong>Adjust if needed.</strong> If you change the colour or tolerance, click Remove Background again to refresh the result.</li>
+                <li><strong>Download the PNG.</strong> The file is saved at the same size as your original image.</li>
             </ol>
 
-            <h2>Choosing the right tolerance</h2>
-            <p>A value between 25 and 45 suits most images. If patches of background remain, raise the tolerance a little. If parts of your subject start to disappear, lower it. Photos taken in uneven light contain many shades of the same background, so they usually need a higher setting than a flat digital graphic.</p>
-
-            <h2>Tips for cleaner results</h2>
+            <h2>Common use cases</h2>
             <ul>
-                <li>Start with an evenly lit picture. Shadows and gradients create extra shades that a single colour pick cannot cover.</li>
-                <li>If the subject has a similar colour to the background, for example a white product on white paper, expect some of the subject to be removed as well.</li>
-                <li>Pick the background colour from the area closest to your subject, since that is the shade you most need to match.</li>
-                <li>Use a lossless source such as PNG when possible. JPG compression leaves fuzzy pixels around edges that can survive removal.</li>
-                <li>Preview the result on both a light and a dark page before you use it.</li>
+                <li>Cut out a product photo taken on a white sheet for an online shop.</li>
+                <li>Make a logo transparent so it sits cleanly on any coloured page.</li>
+                <li>Turn a scanned signature into a PNG you can place on documents.</li>
+                <li>Remove the green or blue backdrop from a simple green-screen shot.</li>
+                <li>Prepare icons and clip art for slides, posters or websites.</li>
+                <li>Clear the plain background from a sticker or badge design.</li>
+                <li>Remove the flat colour from a scanned drawing or sketch before adding a new background.</li>
+                <li>Make stamps, seals or handwritten notes usable as overlays.</li>
             </ul>
 
-            <h2>What ChromaCut is not</h2>
-            <p>ChromaCut is a colour-based remover, not an artificial-intelligence cut-out tool. It cannot separate a subject from a busy scene with many colours, such as a person standing in front of trees. For that kind of picture, use a dedicated photo editor. For solid or near-solid backgrounds it is fast and predictable.</p>
+            <h2>Tips for cleaner background removal</h2>
+            <ul>
+                <li><strong>Shoot on an even background.</strong> Shadows and gradients create many shades, and one colour pick cannot cover all of them.</li>
+                <li><strong>Pick close to the subject.</strong> Sample the background near the edge of the object, where the shade matters most.</li>
+                <li><strong>Raise tolerance in small steps.</strong> Try 5 to 10 points at a time and check the result each time.</li>
+                <li><strong>Avoid matching colours.</strong> A white product on white paper will lose some of its own white areas.</li>
+                <li><strong>Start with a high-quality file.</strong> JPG compression leaves faint speckles near edges. A PNG or an original camera file gives a cleaner result.</li>
+                <li><strong>Check the result on light and dark pages.</strong> Leftover edge pixels are easy to miss on one background and obvious on another.</li>
+            </ul>
 
             <h2>Troubleshooting</h2>
-            <p>If your downloaded PNG still shows a background, check that you pressed Remove Background after picking the colour, and try a slightly higher tolerance. If the image looks jagged, the source is probably compressed or low resolution. If a very large image feels slow, resize it first, because processing large pictures uses more memory on phones and older computers.</p>
+            <ul>
+                <li><strong>Nothing was removed.</strong> A tolerance of 0 removes nothing. Set it to at least 1, then click Remove Background.</li>
+                <li><strong>Patches of background remain.</strong> The background has several shades. Increase the tolerance a little, or pick a colour from the leftover area.</li>
+                <li><strong>Parts of the subject disappeared.</strong> Those areas are close to the background colour. Lower the tolerance.</li>
+                <li><strong>There are holes inside the subject.</strong> ChromaCut removes the chosen colour everywhere in the image, not only around the outside. If the subject contains that colour, it will be cleared there too.</li>
+                <li><strong>Edges look rough.</strong> The tool makes hard cuts and does not smooth edges. A larger, sharper source image helps.</li>
+                <li><strong>The download looks like it has a white or black background.</strong> Some viewers do not show transparency. Open the file in a browser, an editor, or place it on a coloured page to check.</li>
+                <li><strong>The page is slow.</strong> Very large images use a lot of memory. Resize the picture first.</li>
+            </ul>
 
             <h2>Frequently asked questions</h2>
-            <div class="rdj-faq"><h3>Does ChromaCut upload my image anywhere?</h3><p>No. Everything runs in your browser using the HTML5 Canvas API, and your image stays on your device. The page loads Google Analytics and Google AdSense, which use cookies. See the <a href="https://rdjpublishers.com/privacy-policy.html">Privacy Policy</a> for details.</p></div>
-            <div class="rdj-faq"><h3>What image formats are supported?</h3><p>Any format your browser can open, including JPG, PNG, WebP, GIF and BMP. The output is always a transparent PNG.</p></div>
-            <div class="rdj-faq"><h3>How does the tolerance slider work?</h3><p>Tolerance controls how broadly the chosen colour is matched. At 0 only exact matches are removed. At 100 a wide range of similar shades is erased. Try 25 to 45 for most images.</p></div>
-            <div class="rdj-faq"><h3>Can I remove a complex or gradient background?</h3><p>ChromaCut is designed for solid or near-solid backgrounds such as white or green screen. Gradients and busy scenes will not come out cleanly with one colour pick.</p></div>
-            <div class="rdj-faq"><h3>My downloaded PNG still has a background. What happened?</h3><p>Make sure you pressed Remove Background after picking the colour, and try increasing the tolerance slightly. Also check that you are viewing the file in an app that shows transparency.</p></div>
-            <div class="rdj-faq"><h3>Is ChromaCut free?</h3><p>Yes. It is free to use and needs no sign-up.</p></div>
+            <div class="rdj-faq"><h3>Is ChromaCut free?</h3><p>Yes. It is free to use, with no sign-up and no watermark on your download.</p></div>
+            <div class="rdj-faq"><h3>What file format do I get?</h3><p>Always a PNG, because PNG supports transparency. JPG does not.</p></div>
+            <div class="rdj-faq"><h3>What does the tolerance slider do?</h3><p>It sets how different a pixel can be from your chosen colour and still be removed. Low values are strict. High values remove more shades.</p></div>
+            <div class="rdj-faq"><h3>Can it remove a busy or complex background?</h3><p>No. It is built for solid or near-solid backgrounds. Scenes with many colours, such as a person in front of trees, need a dedicated photo editor.</p></div>
+            <div class="rdj-faq"><h3>Does it change the size or quality of my image?</h3><p>No. The output has the same width and height as the original. Only the matching pixels become transparent.</p></div>
+            <div class="rdj-faq"><h3>Can I remove more than one colour?</h3><p>Not in one pass. The tool removes one chosen colour at a time.</p></div>
+            <div class="rdj-faq"><h3>Does it work on phones and tablets?</h3><p>Yes, on modern mobile browsers. Tap the background to pick a colour. Large photos may be slower on older devices.</p></div>
+            <div class="rdj-faq"><h3>Can I undo a result?</h3><p>There is no undo button, but your original file is never changed. Adjust the settings and click Remove Background again, or reload the image to start over.</p></div>
+
+            <h2>Privacy note</h2>
+            <p>Your images stay in your browser. ChromaCut reads the file and processes it on your own device using the browser's canvas feature, so your picture is not uploaded to our servers. The page itself does load Google Analytics and Google AdSense, which may use cookies. Neither of them receives your image. See the <a href="https://rdjpublishers.com/privacy-policy.html">Privacy Policy</a> for details.</p>
+
+            <h2>About ChromaCut</h2>
+            <p>ChromaCut is made by <strong>RDJ Publishers</strong>, an independent studio that builds simple, free browser tools with no accounts or installs. The code is available on <a href="https://github.com/rdjpublishers/ChromaCut" target="_blank" rel="noopener">GitHub</a>. If you find a bug or have an idea, use the Contact page.</p>
         </article>
 
     </div>
